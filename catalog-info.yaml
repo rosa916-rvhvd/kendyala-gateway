@@ -1,0 +1,68 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: kendyala-poi-gateway-app-dev
+  annotations:
+    argocd/app-name: kendyala-poi-gateway-app-dev
+    backstage.io/kubernetes-id: kendyala-poi-gateway-app
+    backstage.io/kubernetes-namespace: kendyala
+    janus-idp.io/tekton-enabled : 'true'
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: rosa916-rvhvd/kendyala-gateway
+  tags:
+    - java
+    - quarkus
+    - maven
+    - workshop
+  links:
+    - url: https://console-openshift-console.apps.rosa916.9nln.p1.openshiftapps.com/dev-pipelines/ns/kendyala/
+      title: Pipelines
+      icon: web
+    - url: https://console-openshift-console.apps.rosa916.9nln.p1.openshiftapps.com/k8s/ns/kendyala/deployments/kendyala-poi-gateway-app
+      title: Deployment
+      icon: web
+    - url: https://devspaces.apps.rosa916.9nln.p1.openshiftapps.com/#https://github.com/rosa916-rvhvd/kendyala-gateway?che-editor=che-incubator/che-code/latest&devfilePath=.devfile-vscode.yaml
+      title: OpenShift Dev Spaces (VS Code)
+      icon: web
+spec:
+  type: service
+  lifecycle: production
+  owner: "user:default/kendyala"
+  system: workshop-system-kendyala
+  providesApis:
+    - gateway-api-kendyala
+  consumesApis:
+    - backend-api-kendyala
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: workshop-system-kendyala
+  tags:
+    - backstage
+    - janus-idp
+    - openshift
+    - workshop
+    - rh-summit
+spec:
+  owner: "user:default/kendyala"
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: gateway-api-kendyala
+  description: API surface exposed to interact with Backends (summit POIs + parks data) via the Gateway
+  links:
+    - url: http://kendyala-poi-gateway-app-kendyala.apps.rosa916.9nln.p1.openshiftapps.com/q/swagger-ui
+      title: Swagger UI
+      icon: web
+    - url: https://github.com/rosa916-rvhvd/kendyala-gateway/tree/main/src/main/resources/META-INF/openapi.yaml
+      title: API Spec
+      icon: code
+spec:
+  type: openapi
+  lifecycle: production
+  owner: "user:default/kendyala"
+  system: workshop-system-kendyala
+  definition:
+    $text: https://github.com/rosa916-rvhvd/kendyala-gateway/tree/main/src/main/resources/META-INF/openapi.yaml
